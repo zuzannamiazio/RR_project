@@ -306,3 +306,27 @@ def compare_stacked_bar(
     plt.show()
 
     return None
+
+def plot_numeric_boxplots(
+    df: pd.DataFrame,
+    numeric_cols: list,
+    target_col: str = 'y',
+    exclude_col: str = 'client_id') -> None:
+    
+    numeric_cols_temp = [col for col in numeric_cols if col != exclude_col]
+
+    num_cols = 2
+    num_rows = (len(numeric_cols_temp) + num_cols - 1) // num_cols
+
+    fig, axes = plt.subplots(nrows=num_rows, ncols=num_cols, figsize=(20, 20))
+
+    for i, ax in zip(numeric_cols_temp, axes.flatten()):
+        sns.boxplot(x=target_col, y=i, data=df, ax=ax)
+        ax.set_title(f"Boxplot of {i} by target variable")
+        ax.set_xlabel(f'Target ({target_col})')
+        ax.set_ylabel(i)
+        ax.tick_params(axis='x', rotation=45)
+
+    plt.suptitle('Boxplots of Numeric Variables by Target "y"', size=20, y=1)
+    plt.tight_layout()
+    plt.show()
